@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sign Up | WeatherAI+</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bulma CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <!-- Animate.css -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(135deg, #90e0ef, #caf0f8);
+      font-family: 'Quicksand', sans-serif;
+    }
+
+    .card {
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      z-index: 2;
+    }
+
+    .title {
+      color: #0077b6;
+      font-weight: 700;
+    }
+
+    .button.is-primary {
+      background-color: #0077b6;
+      transition: all 0.3s ease;
+    }
+
+    .button.is-primary:hover {
+      background-color: #00b4d8;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0, 183, 255, 0.4);
+    }
+
+    .fadeIn {
+      animation: fadeInUp 1s ease;
+    }
+
+    @keyframes fadeInUp {
+      0% {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <section class="section is-flex is-align-items-center is-justify-content-center" style="min-height: 100vh;">
+    <div class="container">
+      <div class="columns is-centered">
+        <div class="column is-6">
+          <div class="card p-6 animate__animated animate__fadeInDown">
+            <h1 class="title has-text-centered">Create Your Account</h1>
+            <h2 class="subtitle has-text-centered mb-5">Join WeatherAI+ and stay updated!</h2>
+
+            <form method="POST" class="fadeIn">
+              {% csrf_token %}
+              
+              <div class="columns">
+                <div class="column">
+                  <div class="field">
+                    <label class="label">First Name</label>
+                    <div class="control">
+                      <input class="input" type="text" name="firstname" placeholder="John" required>
+                    </div>
+                  </div>
+                </div>
+                <div class="column">
+                  <div class="field">
+                    <label class="label">Second Name</label>
+                    <div class="control">
+                      <input class="input" type="text" name="secondname" placeholder="Doe" required>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="label">Username</label>
+                <div class="control">
+                  <input class="input" type="text" name="username" placeholder="yourusername" required>
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="label">Email</label>
+                <div class="control">
+                  <input class="input" type="email" name="email" placeholder="you@example.com" required>
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="label">Password</label>
+                <div class="control">
+                  <input class="input" type="password" name="password" placeholder="••••••••" required>
+                </div>
+              </div>
+
+              <div class="field mt-5">
+                <button type="submit" class="button is-primary is-fullwidth">Sign Up</button>
+              </div>
+
+              <p class="has-text-centered mt-4">
+                Already have an account? <a href="{% url 'login' %}" class="has-text-link">Log In</a>
+              </p>
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</body>
+</html>

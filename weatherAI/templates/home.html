@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WeatherAI+ | Home</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f1f1f1;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    header {
+      background-color: #0077b6;
+      color: white;
+      padding: 30px 20px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+    .hero-img {
+        width: 100%;
+        height: 500px;
+        background: linear-gradient(rgba(255, 255, 255, 0.2), rgba(0, 119, 182, 0.6)), 
+                    url('https://i.pinimg.com/736x/2d/f8/2a/2df82a71be65940f0c7b5bb8bcb2ea5f.jpg') no-repeat center center/cover;
+        position: relative;
+        box-shadow: inset 0 -50px 80px rgba(0, 0, 0, 0.1);
+      }
+      
+    .weather-info {
+      background-color: #caf0f8;
+      padding: 50px 20px;
+      text-align: center;
+    }
+    .weather-info h2 {
+      color: #0077b6;
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+    .weather-info p {
+      color: #333;
+      font-size: 1.15rem;
+      max-width: 800px;
+      margin: auto;
+      line-height: 1.7;
+    }
+    .form-section {
+      background-color: #90e0ef;
+      padding: 50px 20px;
+      text-align: center;
+    }
+    .form-section h3 {
+      color: #0077b6;
+      margin-bottom: 25px;
+      font-size: 1.8rem;
+    }
+    .btn-custom {
+      background-color: #00b4d8;
+      color: white;
+      transition: 0.3s;
+    }
+    .btn-custom:hover {
+      background-color: #0077b6;
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>WeatherAI+</h1>
+    <p>Smart Forecasting for Smarter Decisions</p>
+  </header>
+
+  <div class="hero-img"></div>
+
+  <section class="weather-info">
+    <h2>Advanced Weather Analysis for Mansoura</h2>
+    <p>
+      Discover the power of <strong>AI-driven precision forecasting</strong> tailored for Mansoura. Our intelligent system analyzes historical and real-time climate data to uncover <strong>critical weather patterns</strong>, detect <strong>climate anomalies</strong>, and provide <strong>data-backed predictions</strong> that empower agriculture, logistics, and everyday life. Make every decision with confidence — powered by WeatherAI+.
+    </p>
+  </section>
+
+  <section class="form-section">
+    <div class="container">
+      <h3>Choose Time Period for Analysis</h3>
+      <form method="POST" >
+        {% csrf_token %}
+        <div class="row g-3 justify-content-center">
+          <div class="col-md-4">
+            <label for="start_date" class="form-label">Start Date</label>
+            <input type="date" id="start_date" name="start_date" class="form-control" min="2023-05-01" required>
+          </div>
+          <div class="col-md-4">
+            <label for="end_date" class="form-label">End Date</label>
+            <input type="date" id="end_date" name="end_date" class="form-control" max="2025-05-10" required>
+          </div>
+        </div>
+        <div class="mt-4">
+          <button type="submit" class="btn btn-custom btn-lg">Start Analysis</button>
+        </div>
+      </form>
+      {% if data %}
+      {% for vis in data.values %}
+      <div>{{vis | safe }}</div>
+      {% endfor %}
+      {% endif %}
+      <a href="{% url 'fetch_weather' %}"><button class="btn btn-custom btn-lg">Want to predict?</button></a>
+    </div>
+  </section>
+
+</body>
+</html>

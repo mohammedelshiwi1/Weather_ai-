@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Weather Data</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+</head>
+<body>
+  <div class="container" style="margin-top: 50px;">
+    <h2 class="title">Weather Data Fetch</h2>
+
+    <div class="field">
+      <label class="label">Device IP Address</label>
+      <div class="control">
+        <input class="input" id="ip_address" type="text" placeholder="مثال: 192.168.1.100" required>
+      </div>
+    </div>
+
+    <div class="buttons mt-4">
+      <button onclick="startFetching()" class="button is-info">Start Fetching</button>
+      <button onclick="stopFetching()" class="button is-danger ml-2">Stop Fetching</button>
+      <a href="{% url 'user_readings_csv' %}" class="button is-success ml-2">Download CSV</a>
+    </div>
+
+    <h3 class="mt-6">Readings:</h3>
+    <table class="table is-striped is-fullwidth">
+      <thead>
+        <tr>
+          <th>Timestamp</th>
+          <th>Real Temp (°C)</th>
+          <th>Max Temp</th>
+          <th>Min Temp</th>
+          <th>Max Feel Like</th>
+          <th>Min Feel Like</th>
+          <th>Humidity (%)</th>
+          <th>Pressure (bar)</th>
+          <th>Prediction</th>
+        </tr>
+      </thead>
+      <tbody id="readings-body">
+        {% for r in readings %}
+          <tr>
+            <td>{{ r.timestamp }}</td>
+            <td>{{ r.real_temp }}</td>
+            <td>{{ r.max_temp }}</td>
+            <td>{{ r.min_temp }}</td>
+            <td>{{ r.max_feel }}</td>
+            <td>{{ r.min_feel }}</td>
+            <td>{{ r.humidity }}</td>
+            <td>{{ r.pressure }}</td>
+            <td>{{ r.prediction }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    let interval = null;
+
+    function startFetching() {
+      const ip = document.getElementById("ip_address").value;
+      if (!ip) {
+        alert("Please enter the IP address first!");
+        return;
+      }
+
+      stopFetching(); // Prevent multiple intervals
+
+      interval = setInterval(() => {
+        fetchData(ip);
+      }, 6000); // Every 6 seconds
+    }
+
+    function stopFetching() {
+      if (interval) {
+        clearInterval(interval);
+        interval = null;
+        alert("تم إيقاف التحديث التلقائي.");
+      }
+    }
+
+    function fetchData(ip) {
+      const formData = new FormData();
+      formData.append("ip_address", ip);
+
+      fetch("{% url 'fetch_weather' %}", {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": "{{ csrf_token }}"
+        },
+        body: formData
+      })
+      .then(res => res.json())
+      .then(json => {
+        if (json.success) {
+          const d = json.data;
+          const row = `
+            <tr>
+              <td>${d.timestamp}</td>
+              <td>${d.real_temp}</td>
+              <td>${d.max_temp}</td>
+              <td>${d.min_temp}</td>
+              <td>${d.max_feel}</td>
+              <td>${d.min_feel}</td>
+              <td>${d.humidity}</td>
+              <td>${d.pressure}</td>
+              <td>${d.prediction}</td>
+            </tr>`;
+          const body = document.getElementById("readings-body");
+          body.insertAdjacentHTML('afterbegin', row);
+        } else {
+          console.error(json.error);
+        }
+      })
+      .catch(err => console.error("Error:", err));
+    }
+  </script>
+</body>
+</html>
